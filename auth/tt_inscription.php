@@ -30,7 +30,7 @@
   $password_crypt = password_hash($password, PASSWORD_BCRYPT, $options);
 
   // Connexion :
-  require_once("param.inc.php");
+  require_once("../config/param.inc.php");
   $mysqli = new mysqli($host, $login, $passwd, $dbname);
   if ($mysqli->connect_error) {
     $_SESSION['erreur']="Problème de connexion à la base de données ! &#128557;";
@@ -78,10 +78,9 @@
   } else {
     $_SESSION['erreur'] = "Impossible de préparer l'enregistrement.";
   }
-
   $mysqli->close();
 
-  header('Location: index.php');
+  header('Location: ../index.php');
 
 
 ?>

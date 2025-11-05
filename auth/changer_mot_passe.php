@@ -9,15 +9,15 @@
   }
 
   $titre = "Changer mot de passe";
-  include('header.inc.php');
-  include('menu.inc.php');
+  include('../includes/header.inc.php');
+  include('../includes/menu.inc.php');
 ?>
 
 <div class="row">
   <div class="col-lg-6 mx-auto">
     <h1>Changer mon mot de passe</h1>
     
-    <?php include('message.inc.php'); ?>
+    <?php include('../includes/message.inc.php'); ?>
     
     <div class="card">
       <div class="card-header">
@@ -41,9 +41,8 @@
             <label for="confirmer_password" class="form-label">Confirmer le nouveau mot de passe *</label>
             <input type="password" class="form-control" id="confirmer_password" name="confirmer_password" placeholder="Confirmez votre nouveau mot de passe..." required minlength="6">
           </div>
-          
-          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a href="tableau_bord.php" class="btn btn-outline-secondary me-md-2">Annuler</a>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="../pages/tableau_bord.php" class="btn btn-outline-secondary me-md-2">Annuler</a>
             <button type="submit" class="btn btn-warning">Changer le mot de passe</button>
           </div>
           
@@ -67,5 +66,5 @@
 </div>
 
 <?php
-  include('footer.inc.php');
+  include('../includes/footer.inc.php');
 ?>

@@ -31,9 +31,8 @@
     header('Location: changer_mot_passe.php');
     exit();
   }
-  
-  // Connexion à la base de données
-  require_once("param.inc.php");
+    // Connexion à la base de données
+  require_once("../config/param.inc.php");
   $mysqli = new mysqli($host, $login, $passwd, $dbname);
   if ($mysqli->connect_error) {
     $_SESSION['erreur'] = "Problème de connexion à la base de données !";
@@ -63,12 +62,11 @@
         if ($updateStmt = $mysqli->prepare("UPDATE compte SET password = ? WHERE id = ?")) {
           $updateStmt->bind_param("si", $nouveau_password_crypt, $_SESSION['user_id']);
           
-          if ($updateStmt->execute()) {
-            $_SESSION['message'] = "Votre mot de passe a été modifié avec succès !";
+          if ($updateStmt->execute()) {            $_SESSION['message'] = "Votre mot de passe a été modifié avec succès !";
             $updateStmt->close();
             $stmt->close();
             $mysqli->close();
-            header('Location: tableau_bord.php');
+            header('Location: ../pages/tableau_bord.php');
             exit();
           } else {
             $_SESSION['erreur'] = "Erreur lors de la mise à jour du mot de passe.";

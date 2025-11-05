@@ -3,13 +3,11 @@
 
   $email = htmlentities($_POST['email']);
   $password = htmlentities($_POST['password']);
-  
-  // Connexion :
-  require_once("param.inc.php");
-  $mysqli = new mysqli($host, $login, $passwd, $dbname);
-  if ($mysqli->connect_error) {
+    // Connexion :
+  require_once("../config/param.inc.php");
+  $mysqli = new mysqli($host, $login, $passwd, $dbname);  if ($mysqli->connect_error) {
     $_SESSION['erreur']="Problème de connexion à la base de données ! &#128557;";
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit();
   }
 
@@ -35,9 +33,8 @@
         $_SESSION['connecte'] = true;
           // Message de succès
         $_SESSION['message'] = "Connexion réussie ! Bienvenue " . $user['prenom'] . " " . $user['nom'];
-        
-        // Redirection vers le tableau de bord
-        header('Location: tableau_bord.php');
+          // Redirection vers le tableau de bord
+        header('Location: ../pages/tableau_bord.php');
         
       } else {
         // Mot de passe incorrect

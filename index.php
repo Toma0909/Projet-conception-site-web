@@ -1,9 +1,9 @@
 <?php
   session_start();
   $titre = "Accueil";
-  include('header.inc.php');
-  include('menu.inc.php');
-  include('message.inc.php')
+  include('includes/header_root.inc.php');
+  include('includes/menu_root.inc.php');
+  include('includes/message.inc.php')
 ?>
 
 <h1>Bienvenue chez LiftUp</h1>
@@ -15,7 +15,7 @@
       <div class="card-body">
         <h5 class="card-title">Pour les Clients</h5>
         <p class="card-text">Trouvez facilement des déménageurs qualifiés et obtenez des devis personnalisés</p>
-        <a href="inscription.php" class="btn btn-primary">Demander un devis</a>
+        <a href="auth/inscription.php" class="btn btn-primary">Demander un devis</a>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@
       <div class="card-body">
         <h5 class="card-title">Pour les Déménageurs</h5>
         <p class="card-text">Développez votre activité en rejoignant notre réseau de professionnels</p>
-        <a href="inscription.php" class="btn btn-success">Rejoindre le réseau</a>
+        <a href="auth/inscription.php" class="btn btn-success">Rejoindre le réseau</a>
       </div>
     </div>
   </div>
@@ -42,5 +42,5 @@
 </div>
 
 <?php
-  include('footer.inc.php');
+  include('includes/footer.inc.php');
 ?>

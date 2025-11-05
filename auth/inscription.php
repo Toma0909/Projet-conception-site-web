@@ -1,0 +1,55 @@
+<?php
+  $titre = "Inscription";
+
+  include('../includes/header.inc.php');
+  include('../includes/menu.inc.php');
+?>
+  <h1>Création d'un compte</h1>
+  <form  method="POST" action="tt_inscription.php">
+
+    <!-- Choix du type d'utilisateur -->
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="me-3">Je suis un :</span>
+            <div class="btn-group" role="group" aria-label="Type d'utilisateur">
+                <input type="radio" class="btn-check" name="type_utilisateur" id="client" value="client" autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="client">Client</label>
+                
+                <input type="radio" class="btn-check" name="type_utilisateur" id="demenageur" value="demenageur" autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="demenageur">Déménageur</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nom et prénom sur une ou deux lignes (en fonction de la taille) -->
+    <!-- Ici on utilise le breakpoint medium -->
+    <div class="row my-3">
+        <div class="col-md-6">
+            <label for="nom" class="form-label">Nom</label>
+            <input type="text" class="form-control " id="nom" name="nom" placeholder="Votre nom..." required>
+        </div>
+        <div class="col-md-6">
+            <label for="prenom" class="form-label">Prénom</label>
+            <input type="text" class="form-control " id="prenom" name="prenom" placeholder="Votre prénom..." required>
+        </div>
+    </div>
+    <!-- email et mot de passe -->
+    <div class="row">
+        <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control " id="email" name="email" placeholder="Votre email..." required>
+        </div>
+        <div class="col-md-6">
+            <label for="password" class="form-label">Mot de passe</label>
+            <input type="password" class="form-control " id="password" name="password" placeholder="Votre mot de passe..." required>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="d-grid d-md-block">
+            <button class="btn btn-outline-primary" type="submit">Inscription</button></div>   
+        </div>
+    </div>
+</form> 
+<?php
+  include('../includes/footer.inc.php');
+?>

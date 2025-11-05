@@ -1,16 +1,15 @@
 <?php
   session_start();
-  
-  // Vérifier si l'utilisateur est connecté
+    // Vérifier si l'utilisateur est connecté
   if (!isset($_SESSION['connecte']) || $_SESSION['connecte'] !== true) {
     $_SESSION['erreur'] = "Vous devez être connecté pour accéder au tableau de bord.";
-    header('Location: connexion.php');
+    header('Location: ../auth/connexion.php');
     exit();
   }
 
   $titre = "Tableau de bord";
-  include('header.inc.php');
-  include('menu.inc.php');
+  include('../includes/header.inc.php');
+  include('../includes/menu.inc.php');
 ?>
 
 <div class="row">
@@ -90,7 +89,7 @@
             <div class="card-body text-center">
               <h6 class="card-title">Changer mot de passe</h6>
               <p class="card-text">Modifier votre mot de passe de connexion</p>
-              <a href="changer_mot_passe.php" class="btn btn-outline-warning">Changer</a>
+              <a href="../auth/changer_mot_passe.php" class="btn btn-outline-warning">Changer</a>
             </div>
           </div>
         </div>
@@ -137,5 +136,5 @@
 </div>
 
 <?php
-  include('footer.inc.php');
+  include('../includes/footer.inc.php');
 ?>
