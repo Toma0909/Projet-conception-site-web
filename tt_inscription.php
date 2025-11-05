@@ -29,7 +29,27 @@
               // . $mysqli->connect_error);
   }
 
-  // À faire : vérifier si l'email existe déjà !
+  // Vérifier si l'email est déjà utilisé
+  if ($checkStmt = $mysqli->prepare("SELECT id FROM compte WHERE email = ?")) {
+    $checkStmt->bind_param("s", $email);
+    $checkStmt->execute();
+    $checkResult = $checkStmt->get_result();
+
+    if ($checkResult && $checkResult->num_rows > 0) {
+      $_SESSION['erreur'] = "Un compte existe déjà avec cette adresse email.";
+      $checkStmt->close();
+      $mysqli->close();
+      header('Location: inscription.php');
+      exit();
+    }
+
+    $checkStmt->close();
+  } else {
+    $_SESSION['erreur'] = "Erreur lors de la vérification de l'email.";
+    $mysqli->close();
+    header('Location: inscription.php');
+    exit();
+  }
 
 
   // Modifier la requête en fonction de la table et/ou des attributs :
@@ -45,9 +65,12 @@
         // Il y a eu une erreur
         $_SESSION['erreur'] =  "Impossible d'enregistrer";
     }
+    $stmt->close();
+  } else {
+    $_SESSION['erreur'] = "Impossible de préparer l'enregistrement.";
   }
- 
 
+  $mysqli->close();
 
   header('Location: index.php');
 
