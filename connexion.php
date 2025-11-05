@@ -1,4 +1,5 @@
 <?php
+  session_start();
   $titre = "Connexion";
 
   include('header.inc.php');
@@ -6,6 +7,9 @@
 ?>
 
   <h1>Connexion à votre compte</h1>
+  
+  <?php include('message.inc.php'); ?>
+  
   <form  method="POST" action="tt_connexion.php">
     <div class="row my-3">
       <div class="col-md-6">

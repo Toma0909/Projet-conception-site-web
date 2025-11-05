@@ -1,1 +1,6 @@
 /* Si vous avez besoin d'un fichier CSS */
+
+/* Couleur personnalisée pour la navbar */
+.navbar-custom {
+    background-color: #f8f9fa !important; /* Gris très clair */
+}

@@ -4,9 +4,22 @@
   include('header.inc.php');
   include('menu.inc.php');
 ?>
-
   <h1>Création d'un compte</h1>
   <form  method="POST" action="tt_inscription.php">
+
+    <!-- Choix du type d'utilisateur -->
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="me-3">Je suis un :</span>
+            <div class="btn-group" role="group" aria-label="Type d'utilisateur">
+                <input type="radio" class="btn-check" name="type_utilisateur" id="client" value="client" autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="client">Client</label>
+                
+                <input type="radio" class="btn-check" name="type_utilisateur" id="demenageur" value="demenageur" autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="demenageur">Déménageur</label>
+            </div>
+        </div>
+    </div>
 
     <!-- Nom et prénom sur une ou deux lignes (en fonction de la taille) -->
     <!-- Ici on utilise le breakpoint medium -->

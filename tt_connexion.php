@@ -33,12 +33,11 @@
         $_SESSION['email'] = $user['email'];
         $_SESSION['role'] = $user['role'];
         $_SESSION['connecte'] = true;
-        
-        // Message de succès
+          // Message de succès
         $_SESSION['message'] = "Connexion réussie ! Bienvenue " . $user['prenom'] . " " . $user['nom'];
         
-        // Redirection vers la page d'accueil
-        header('Location: index.php');
+        // Redirection vers le tableau de bord
+        header('Location: tableau_bord.php');
         
       } else {
         // Mot de passe incorrect

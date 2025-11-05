@@ -1,16 +1,25 @@
 <?php
   session_start(); // Pour les massages
-
   // Contenu du formulaire :
   $nom =  htmlentities($_POST['nom']);
   $prenom = htmlentities($_POST['prenom']);
   $email =  htmlentities($_POST['email']);
   $password = htmlentities($_POST['password']);
-  $role = 0; 
+  $type_utilisateur = htmlentities($_POST['type_utilisateur']);
+  
+  // Définir le rôle selon le type d'utilisateur choisi :
+  if ($type_utilisateur == 'client') {
+    $role = 1; // Client
+  } elseif ($type_utilisateur == 'demenageur') {
+    $role = 2; // Déménageur
+  } else {
+    $role = 0; // Par défaut (compte non activé)
+  }
+  
   // Définir des valeurs pour le role :
   // 0 : le compte n'est pas activé,
-  // 1 : tuteur entreprise,
-  // 2 : Responsable Ping,
+  // 1 : client,
+  // 2 : déménageur,
   // 3 : admin
 
   // Option pour bcrypt (voir le lien du cours vers le site de PHP) :
