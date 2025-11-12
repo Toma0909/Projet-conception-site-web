@@ -95,21 +95,34 @@
         </div>
       </div>
     </div>
-    
-    <?php if ($_SESSION['role'] == 2): // Si c'est un déménageur ?>
+      <?php if ($_SESSION['role'] == 2): // Si c'est un déménageur ?>
     <div class="mt-4">
       <div class="card border-info">
         <div class="card-header bg-info text-white">
           <h6 class="mb-0">Espace Déménageur</h6>
         </div>
         <div class="card-body">
-          <p>Fonctionnalités spécifiques aux déménageurs :</p>
-          <ul>
-            <li>Gestion des demandes de devis</li>
-            <li>Planning des interventions</li>
-            <li>Historique des déménagements</li>
-          </ul>
-          <a href="#" class="btn btn-info">Accéder aux outils</a>
+          <p>Gérez votre activité de déménageur :</p>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title">📋 Mes interventions</h6>
+                  <p class="card-text small">Consultez les déménagements pour lesquels vous avez été accepté</p>
+                  <a href="mes_interventions.php" class="btn btn-info btn-sm w-100">Voir mes interventions</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title">🔍 Annonces disponibles</h6>
+                  <p class="card-text small">Trouvez de nouveaux clients et proposez vos services</p>
+                  <a href="annonces.php" class="btn btn-info btn-sm w-100">Voir les annonces</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -120,13 +133,27 @@
           <h6 class="mb-0">Espace Client</h6>
         </div>
         <div class="card-body">
-          <p>Fonctionnalités spécifiques aux clients :</p>
-          <ul>
-            <li>Demander un devis</li>
-            <li>Suivi de mes demandes</li>
-            <li>Historique des déménagements</li>
-          </ul>
-          <a href="#" class="btn btn-success">Faire une demande</a>
+          <p>Gérez vos demandes de déménagement :</p>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title">📦 Mes déménagements</h6>
+                  <p class="card-text small">Consultez et gérez vos demandes de déménagement</p>
+                  <a href="mes_demenagements.php" class="btn btn-success btn-sm w-100">Voir mes demandes</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title">➕ Nouvelle demande</h6>
+                  <p class="card-text small">Créez une nouvelle demande de déménagement</p>
+                  <a href="creer_demenagement.php" class="btn btn-success btn-sm w-100">Créer une demande</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

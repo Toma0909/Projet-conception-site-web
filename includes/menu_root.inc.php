@@ -13,16 +13,14 @@ if (session_status() == PHP_SESSION_NONE) {
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
-      
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="pages/annonces.php">Annonces</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="pages/page.php">Qui sommes nous ?</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="pages/autre.php">Autre page</a>
-        </li>
-      </ul>      <!-- Partie droite -->
+      </ul><!-- Partie droite -->
       <ul class="navbar-nav">
           <?php if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true): ?>
               <!-- Utilisateur connecté -->
