@@ -8,7 +8,8 @@
     exit();
   }
 
-  $titre = "Changer mot de passe";
+  $titre = "Changer le mot de passe";
+  require_once('../config/param.inc.php');
   include('../includes/header.inc.php');
   include('../includes/menu.inc.php');
 ?>

@@ -1,13 +1,8 @@
 
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// ... votre code PHP habituel commence ici ...
-// (par exemple : include 'header.php', session_start(), etc.)
   session_start();
   $titre = "Accueil";
+  $page_class = "home-page";
   
   // Connexion BDD pour afficher quelques annonces
   require_once("config/param.inc.php");
@@ -26,11 +21,13 @@ error_reporting(E_ALL);
     }
   }
   
-  include('includes/header_root.inc.php');
-  include('includes/menu_root.inc.php');
+  include('includes/header.inc.php');
+  include('includes/menu.inc.php');
   include('includes/message.inc.php')
 ?>
 
+<div class="hero-section">
+<div class="container hero-content">
 <h1>Bienvenue chez LiftUp</h1>
 <p class="lead">Votre solution de déménagement de confiance</p>
 
@@ -38,9 +35,19 @@ error_reporting(E_ALL);
   <div class="col-md-4">
     <div class="card h-100 text-center">
       <div class="card-body">
-        <h5 class="card-title">Pour les Clients</h5>
-        <p class="card-text">Trouvez facilement des déménageurs qualifiés et obtenez des devis personnalisés</p>
-        <a href="auth/inscription.php" class="btn btn-primary">Demander un devis</a>
+        <?php if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true && $_SESSION['role'] == 2): ?>
+          <h5 class="card-title">Mes Interventions</h5>
+          <p class="card-text">Consultez et gérez vos interventions de déménagement en cours et à venir</p>
+          <a href="pages/mes_interventions.php" class="btn btn-primary">Mes interventions</a>
+        <?php else: ?>
+          <h5 class="card-title">Pour les Clients</h5>
+          <p class="card-text">Trouvez facilement des déménageurs qualifiés et obtenez des devis personnalisés</p>
+          <?php if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true && $_SESSION['role'] == 1): ?>
+            <a href="pages/creer_demenagement.php" class="btn btn-primary">Créer une demande</a>
+          <?php else: ?>
+            <a href="auth/inscription.php" class="btn btn-primary">Demander un devis</a>
+          <?php endif; ?>
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -48,9 +55,21 @@ error_reporting(E_ALL);
   <div class="col-md-4">
     <div class="card h-100 text-center">
       <div class="card-body">
-        <h5 class="card-title">Pour les Déménageurs</h5>
-        <p class="card-text">Développez votre activité en rejoignant notre réseau de professionnels</p>
-        <a href="auth/inscription.php" class="btn btn-success">Rejoindre le réseau</a>
+        <h5 class="card-title">
+          <?php echo (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true) ? 'Annonces Disponibles' : 'Pour les Déménageurs'; ?>
+        </h5>
+        <p class="card-text">
+          <?php if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true): ?>
+            Parcourez les demandes de déménagement et proposez vos services
+          <?php else: ?>
+            Développez votre activité en rejoignant notre réseau de professionnels
+          <?php endif; ?>
+        </p>
+        <?php if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true): ?>
+          <a href="pages/annonces.php" class="btn btn-success">Voir les annonces</a>
+        <?php else: ?>
+          <a href="auth/inscription.php" class="btn btn-success">Rejoindre le réseau</a>
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -60,7 +79,7 @@ error_reporting(E_ALL);
       <div class="card-body">
         <h5 class="card-title">Qualité Garantie</h5>
         <p class="card-text">Tous nos partenaires sont vérifiés et évalués par nos clients</p>
-        <a href="#" class="btn btn-outline-info">En savoir plus</a>
+        <a href="pages/a_propos.php" class="btn btn-info">En savoir plus</a>
       </div>
     </div>  </div>
 </div>
@@ -92,9 +111,9 @@ error_reporting(E_ALL);
 </div>
 <?php endif; ?>
 
+</div>
+</div>
+
 <?php
-  if (!$mysqli->connect_error) {
-    $mysqli->close();
-  }
   include('includes/footer.inc.php');
 ?>

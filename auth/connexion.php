@@ -1,14 +1,16 @@
 <?php
   session_start();
   $titre = "Connexion";
-
+  require_once('../config/param.inc.php');
   include('../includes/header.inc.php');
   include('../includes/menu.inc.php');
 ?>
 
-  <h1>Connexion à votre compte</h1>
+<div class="row mb-5">
+  <div class="col-lg-10 mx-auto">
+    <h1 class="mb-4">Connexion à votre compte</h1>
   
-  <?php include('../includes/message.inc.php'); ?>
+    <?php include('../includes/message.inc.php'); ?>
   
   <form  method="POST" action="tt_connexion.php">
     <div class="row my-3">
@@ -26,6 +28,9 @@
       <button class="btn btn-outline-primary" type="submit">Connexion</button></div>   
     </div>
   </form>
+  </div>
+</div>
+
 <?php
   include('../includes/footer.inc.php');
 ?>

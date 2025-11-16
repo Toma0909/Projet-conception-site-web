@@ -22,9 +22,15 @@
   include('../includes/message.inc.php');
 ?>
 
-<h1>Annonces de déménagement</h1>
-<p class="lead">Découvrez les demandes de déménagement en cours</p>
+<div class="row mb-5">
+  <div class="col-lg-10 mx-auto">
+    <h1 class="mb-4">Annonces de déménagement</h1>
+    <p class="lead">Découvrez les demandes de déménagement en cours</p>
+  </div>
+</div>
 
+<div class="row mb-4">
+  <div class="col-lg-10 mx-auto">
 <?php if (isset($_SESSION['connecte']) && $_SESSION['connecte'] === true && $_SESSION['role'] == 1): ?>
   <div class="alert alert-info">
     <strong>Vous êtes client :</strong> <a href="creer_demenagement.php" class="alert-link">Créer une nouvelle demande de déménagement</a>
@@ -38,8 +44,12 @@
     <strong>Vous n'êtes pas connecté :</strong> <a href="../auth/connexion.php" class="alert-link">Connectez-vous</a> pour créer une demande ou proposer vos services.
   </div>
 <?php endif; ?>
+  </div>
+</div>
 
 <div class="row g-4 mt-2">
+  <div class="col-lg-10 mx-auto">
+    <div class="row g-4">
   <?php
   if ($result && $result->num_rows > 0) {
     while ($annonce = $result->fetch_assoc()) {
@@ -84,6 +94,8 @@
   
   $mysqli->close();
   ?>
+    </div>
+  </div>
 </div>
 
 <?php

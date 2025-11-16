@@ -22,12 +22,12 @@ error_reporting(E_ALL);
   $client_id = $_SESSION['user_id'];
   
   // Récupération des données du formulaire
-  $titre = htmlentities($_POST['titre']);
-  $description = htmlentities($_POST['description']);
-  $date_demenagement = htmlentities($_POST['date_demenagement']);
-  $heure_debut = htmlentities($_POST['heure_debut']);
-  $ville_depart = htmlentities($_POST['ville_depart']);
-  $ville_arrivee = htmlentities($_POST['ville_arrivee']);
+  $titre = trim($_POST['titre']);
+  $description = trim($_POST['description']);
+  $date_demenagement = $_POST['date_demenagement'];
+  $heure_debut = $_POST['heure_debut'];
+  $ville_depart = trim($_POST['ville_depart']);
+  $ville_arrivee = trim($_POST['ville_arrivee']);
   
   $depart_type = trim($_POST['depart_type']);
   if (!in_array($depart_type, ['maison', 'appartement'])) {

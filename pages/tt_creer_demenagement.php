@@ -12,12 +12,12 @@ error_reporting(E_ALL);
   }
   
   // Récupération des données du formulaire
-  $titre = htmlentities($_POST['titre']);
-  $description = htmlentities($_POST['description']);
-  $date_demenagement = htmlentities($_POST['date_demenagement']);
-  $heure_debut = htmlentities($_POST['heure_debut']);
-  $ville_depart = htmlentities($_POST['ville_depart']);
-  $ville_arrivee = htmlentities($_POST['ville_arrivee']);
+  $titre = trim($_POST['titre']);
+  $description = trim($_POST['description']);
+  $date_demenagement = $_POST['date_demenagement'];
+  $heure_debut = $_POST['heure_debut'];
+  $ville_depart = trim($_POST['ville_depart']);
+  $ville_arrivee = trim($_POST['ville_arrivee']);
   
   $depart_type = trim($_POST['depart_type']);
   if (!in_array($depart_type, ['maison', 'appartement'])) {
@@ -43,6 +43,13 @@ error_reporting(E_ALL);
   $nombre_demenageurs = intval($_POST['nombre_demenageurs']);
   
   $client_id = $_SESSION['user_id'];
+  
+  // Vérifier que le client_id est valide
+  if (empty($client_id)) {
+    $_SESSION['erreur'] = "Erreur : ID utilisateur manquant. Veuillez vous reconnecter.";
+    header('Location: ../auth/connexion.php');
+    exit();
+  }
   
   // Connexion BDD
   require_once("../config/param.inc.php");

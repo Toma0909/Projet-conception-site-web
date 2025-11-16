@@ -39,6 +39,15 @@
   $annonce = $result->fetch_assoc();
   $stmt->close();
   
+  // Vérifier s'il y a des propositions acceptées
+  $acceptee_query = "SELECT COUNT(*) as nb_acceptees FROM proposition WHERE demenagement_id = ? AND statut = 'accepte'";
+  $acceptee_stmt = $mysqli->prepare($acceptee_query);
+  $acceptee_stmt->bind_param("i", $annonce_id);
+  $acceptee_stmt->execute();
+  $acceptee_result = $acceptee_stmt->get_result();
+  $nb_acceptees = $acceptee_result->fetch_assoc()['nb_acceptees'];
+  $acceptee_stmt->close();
+  
   // Récupérer les images
   $images_query = "SELECT * FROM demenagement_image WHERE demenagement_id = ?";
   $images_stmt = $mysqli->prepare($images_query);
@@ -84,9 +93,11 @@
   include('../includes/message.inc.php');
 ?>
 
-<div class="row">
-  <div class="col-lg-8">
-    <h1><?php echo htmlspecialchars($annonce['titre']); ?></h1>
+<div class="row mb-5">
+  <div class="col-lg-10 mx-auto">
+    <div class="row">
+      <div class="col-lg-8">
+        <h1><?php echo htmlspecialchars($annonce['titre']); ?></h1>
     
     <div class="card mb-4">
       <div class="card-header bg-primary text-white">
@@ -210,6 +221,11 @@
               }
             ?>
           </div>
+          
+          <!-- Bouton de messagerie pour les déménageurs ayant fait une proposition -->
+          <a href="messagerie.php?id=<?php echo $annonce_id; ?>" class="btn btn-primary w-100">
+            <i class="bi bi-chat-dots"></i> Contacter le client
+          </a>
         <?php else: ?>
           <form method="POST" action="tt_proposition.php">
             <input type="hidden" name="demenagement_id" value="<?php echo $annonce['id']; ?>">
@@ -252,9 +268,9 @@
                   <?php endif; ?>
                   <p class="mb-0"><small class="text-muted">Proposé le <?php echo date('d/m/Y à H:i', strtotime($prop['date_proposition'])); ?></small></p>
                 </div>
-                <div>
+                <div class="text-end">
                   <?php if ($prop['statut'] == 'en_attente'): ?>
-                    <form method="POST" action="tt_accepter_proposition.php" class="d-inline">
+                    <form method="POST" action="tt_accepter_proposition.php" class="mb-2">
                       <input type="hidden" name="proposition_id" value="<?php echo $prop['id']; ?>">
                       <input type="hidden" name="demenagement_id" value="<?php echo $annonce['id']; ?>">
                       <button type="submit" class="btn btn-success btn-sm">Accepter</button>
@@ -264,6 +280,11 @@
                   <?php else: ?>
                     <span class="badge bg-secondary">Refusée</span>
                   <?php endif; ?>
+                  
+                  <a href="messagerie.php?id=<?php echo $annonce_id; ?>&demenageur_id=<?php echo $prop['demenageur_id']; ?>" 
+                     class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-chat-dots"></i> Message
+                  </a>
                 </div>
               </div>
             </div>
@@ -275,9 +296,11 @@
       </div>
     </div>
     <?php endif; ?>
-  </div>
+      </div>
+      <!-- Fin col-lg-8 -->
   
-  <div class="col-lg-4">
+      <!-- Sidebar -->
+      <div class="col-lg-4">
     <div class="card mb-4">
       <div class="card-header">
         <h5 class="mb-0">Informations</h5>
@@ -295,11 +318,42 @@
         </p>
         <p><strong>Publié le :</strong><br><?php echo date('d/m/Y à H:i', strtotime($annonce['date_creation'])); ?></p>
         
-        <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $annonce['client_id']): ?>
+        <?php if (isset($_SESSION['user_id']) && ($_SESSION['user_id'] == $annonce['client_id'] || $_SESSION['role'] == 3)): ?>
         <hr>
         <div class="d-grid gap-2">
-          <a href="mes_demenagements.php" class="btn btn-outline-primary">Mes déménagements</a>
-          <a href="modifier_demenagement.php?id=<?php echo $annonce['id']; ?>" class="btn btn-outline-warning">Modifier</a>
+          <?php if ($_SESSION['role'] != 3): ?>
+            <a href="mes_demenagements.php" class="btn btn-outline-primary">Mes déménagements</a>
+          <?php endif; ?>
+          
+          <?php if ($annonce['statut'] == 'en_cours' && $_SESSION['user_id'] == $annonce['client_id']): ?>
+            <form method="POST" action="tt_valider_demenagement.php" class="d-inline" onsubmit="return confirm('Confirmez-vous que le déménagement a bien été réalisé ?');">
+              <input type="hidden" name="demenagement_id" value="<?php echo $annonce['id']; ?>">
+              <button type="submit" class="btn btn-success w-100">
+                <i class="bi bi-check-circle-fill"></i> Marquer comme terminé
+              </button>
+            </form>
+          <?php endif; ?>
+          
+          <?php if ($annonce['statut'] == 'termine' && $_SESSION['user_id'] == $annonce['client_id']): ?>
+            <a href="noter_demenageurs.php?id=<?php echo $annonce['id']; ?>" class="btn btn-warning w-100">
+              <i class="bi bi-star-fill"></i> Noter les déménageurs
+            </a>
+          <?php endif; ?>
+          
+          <?php if ($nb_acceptees == 0 || $_SESSION['role'] == 3): ?>
+            <a href="modifier_demenagement.php?id=<?php echo $annonce['id']; ?>" class="btn btn-outline-warning w-100">
+              <i class="bi bi-pencil"></i> Modifier
+            </a>
+          <?php elseif ($_SESSION['user_id'] == $annonce['client_id']): ?>
+            <span class="d-inline-block" tabindex="0" 
+                  data-bs-toggle="tooltip" 
+                  data-bs-placement="top" 
+                  title="Impossible de modifier l'annonce car vous avez déjà accepté un déménageur">
+              <button class="btn btn-outline-secondary w-100 btn-disabled-no-events" disabled>
+                Modifier
+              </button>
+            </span>
+          <?php endif; ?>
         </div>
         <?php endif; ?>
       </div>
@@ -307,11 +361,21 @@
     
     <div class="card">
       <div class="card-body">
-        <a href="annonces.php" class="btn btn-secondary w-100">← Retour aux annonces</a>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 3): ?>
+          <a href="admin_annonces.php" class="btn btn-secondary w-100">← Retour à la gestion des annonces</a>
+        <?php else: ?>
+          <a href="annonces.php" class="btn btn-secondary w-100">← Retour aux annonces</a>
+        <?php endif; ?>
       </div>
     </div>
+      </div>
+      <!-- Fin col-lg-4 -->
+    </div>
+    <!-- Fin row interne -->
   </div>
+  <!-- Fin col-lg-10 mx-auto -->
 </div>
+<!-- Fin row mb-5 -->
 
 <?php
   $mysqli->close();

@@ -21,7 +21,7 @@
       <div class="card-body p-4">
         <h2 class="card-title mb-4">Notre Histoire</h2>
         <p class="card-text">
-          Fondée en 2023, LiftUp est née d'un constat simple : le déménagement reste une étape stressante et coûteuse 
+          Fondée en 2025, LiftUp est née d'un constat simple : le déménagement reste une étape stressante et coûteuse 
           dans la vie de millions de personnes chaque année. Face à un marché fragmenté où il est difficile de trouver 
           des professionnels fiables et à des prix transparents, nous avons décidé de créer une solution.
         </p>
@@ -42,50 +42,34 @@
 <div class="row mb-5">
   <div class="col-lg-10 mx-auto">
     <h2 class="mb-4 text-center">Notre Équipe</h2>
-    <div class="row g-4">
-      <div class="col-md-4">
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-5">
         <div class="card h-100 text-center">
           <div class="card-body">
             <div class="rounded-circle bg-primary text-white mx-auto mb-3 d-flex align-items-center justify-content-center icon-circle">
               <span class="display-4">👨‍💼</span>
             </div>
-            <h5 class="card-title">Pierre Martin</h5>
-            <p class="text-muted">Co-fondateur & CEO</p>
+            <h5 class="card-title">Thomas Cole</h5>
+            <p class="text-muted">Co-fondateur</p>
             <p class="card-text">
-              Ancien déménageur professionnel, Pierre a fondé LiftUp pour moderniser le secteur 
-              et offrir une meilleure expérience aux clients comme aux professionnels.
+              Passionné par l'innovation et le service client, Thomas a co-fondé LiftUp pour révolutionner 
+              l'expérience du déménagement et faciliter la mise en relation entre clients et professionnels.
             </p>
           </div>
         </div>
       </div>
       
-      <div class="col-md-4">
+      <div class="col-md-5">
         <div class="card h-100 text-center">
           <div class="card-body">
             <div class="rounded-circle bg-success text-white mx-auto mb-3 d-flex align-items-center justify-content-center icon-circle">
-              <span class="display-4">👩‍💻</span>
+              <span class="display-4">👨‍💻</span>
             </div>
-            <h5 class="card-title">Sophie Dubois</h5>
-            <p class="text-muted">Co-fondatrice & CTO</p>
+            <h5 class="card-title">Kenzi Allam</h5>
+            <p class="text-muted">Co-fondateur</p>
             <p class="card-text">
-              Ingénieure en informatique passionnée par la tech au service de l'humain, 
-              Sophie a conçu la plateforme pour qu'elle soit simple et efficace.
-            </p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-md-4">
-        <div class="card h-100 text-center">
-          <div class="card-body">
-            <div class="rounded-circle bg-info text-white mx-auto mb-3 d-flex align-items-center justify-content-center icon-circle">
-              <span class="display-4">👨‍🔧</span>
-            </div>
-            <h5 class="card-title">Thomas Bernard</h5>
-            <p class="text-muted">Responsable Qualité</p>
-            <p class="card-text">
-              Thomas s'assure que tous nos partenaires déménageurs respectent nos standards 
-              de qualité et que nos clients reçoivent le meilleur service possible.
+              Expert en développement et en technologies web, Kenzi a conçu la plateforme LiftUp 
+              pour qu'elle soit intuitive, performante et accessible à tous.
             </p>
           </div>
         </div>
@@ -204,16 +188,16 @@
         <div class="row">
           <div class="col-md-6">
             <ul class="list-unstyled">
-              <li class="mb-3">✅ <strong>Professionnels vérifiés</strong> - Tous nos déménageurs sont contrôlés</li>
-              <li class="mb-3">✅ <strong>Devis gratuits</strong> - Comparez plusieurs offres sans engagement</li>
-              <li class="mb-3">✅ <strong>Assurance incluse</strong> - Vos biens sont protégés</li>
+              <li class="mb-3"> - <strong>Professionnels vérifiés</strong> - Tous nos déménageurs sont contrôlés</li>
+              <li class="mb-3"> - <strong>Devis gratuits</strong> - Comparez plusieurs offres sans engagement</li>
+              <li class="mb-3"> - <strong>Assurance incluse</strong> - Vos biens sont protégés</li>
             </ul>
           </div>
           <div class="col-md-6">
             <ul class="list-unstyled">
-              <li class="mb-3">✅ <strong>Prix transparents</strong> - Pas de frais cachés</li>
-              <li class="mb-3">✅ <strong>Service client réactif</strong> - Une équipe à votre écoute</li>
-              <li class="mb-3">✅ <strong>Avis certifiés</strong> - Des évaluations authentiques</li>
+              <li class="mb-3"> - <strong>Prix transparents</strong> - Pas de frais cachés</li>
+              <li class="mb-3"> - <strong>Service client réactif</strong> - Une équipe à votre écoute</li>
+              <li class="mb-3"> - <strong>Avis certifiés</strong> - Des évaluations authentiques</li>
             </ul>
           </div>
         </div>

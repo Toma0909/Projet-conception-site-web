@@ -4,15 +4,16 @@
   // Configuration
   require_once(__DIR__ . "/../config/param.inc.php");
   
-  // Vérifier si l'utilisateur est connecté et est un client
+  // Vérifier si l'utilisateur est connecté
   if (!isset($_SESSION['connecte']) || $_SESSION['connecte'] !== true) {
     $_SESSION['erreur'] = "Vous devez être connecté pour modifier une demande de déménagement.";
     header('Location: ../auth/connexion.php');
     exit();
   }
   
-  if ($_SESSION['role'] != 1) {
-    $_SESSION['erreur'] = "Seuls les clients peuvent modifier des demandes de déménagement.";
+  // Vérifier que c'est un client ou un admin
+  if ($_SESSION['role'] != 1 && $_SESSION['role'] != 3) {
+    $_SESSION['erreur'] = "Seuls les clients et administrateurs peuvent modifier des demandes de déménagement.";
     header('Location: tableau_bord.php');
     exit();
   }
@@ -20,26 +21,36 @@
   // Récupérer l'ID du déménagement
   if (!isset($_GET['id']) || empty($_GET['id'])) {
     $_SESSION['erreur'] = "Déménagement non trouvé.";
-    header('Location: mes_demenagements.php');
+    $redirect_url = ($_SESSION['role'] == 3) ? 'admin_annonces.php' : 'mes_demenagements.php';
+    header('Location: ' . $redirect_url);
     exit();
   }
   
   $demenagement_id = intval($_GET['id']);
-  $client_id = $_SESSION['user_id'];
+  $is_admin = ($_SESSION['role'] == 3);
   
   // Connexion BDD
   $mysqli = new mysqli($host, $login, $passwd, $dbname);
   
   if ($mysqli->connect_error) {
     $_SESSION['erreur'] = "Problème de connexion à la base de données !";
-    header('Location: mes_demenagements.php');
+    $redirect_url = $is_admin ? 'admin_annonces.php' : 'mes_demenagements.php';
+    header('Location: ' . $redirect_url);
     exit();
   }
   
   // Récupérer les informations du déménagement
-  $query = "SELECT * FROM demenagement WHERE id = ? AND client_id = ?";
-  $stmt = $mysqli->prepare($query);
-  $stmt->bind_param("ii", $demenagement_id, $client_id);
+  // Admin peut modifier toute annonce, client seulement les siennes
+  if ($is_admin) {
+    $query = "SELECT * FROM demenagement WHERE id = ?";
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param("i", $demenagement_id);
+  } else {
+    $query = "SELECT * FROM demenagement WHERE id = ? AND client_id = ?";
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param("ii", $demenagement_id, $_SESSION['user_id']);
+  }
+  
   $stmt->execute();
   $result = $stmt->get_result();
   
@@ -47,12 +58,31 @@
     $_SESSION['erreur'] = "Déménagement non trouvé ou vous n'avez pas les droits pour le modifier.";
     $stmt->close();
     $mysqli->close();
-    header('Location: mes_demenagements.php');
+    $redirect_url = $is_admin ? 'admin_annonces.php' : 'mes_demenagements.php';
+    header('Location: ' . $redirect_url);
     exit();
   }
   
   $demenagement = $result->fetch_assoc();
   $stmt->close();
+  
+  // Vérifier s'il y a des propositions acceptées
+  $query_acceptee = "SELECT COUNT(*) as nb_acceptees FROM proposition WHERE demenagement_id = ? AND statut = 'accepte'";
+  $stmt_acceptee = $mysqli->prepare($query_acceptee);
+  $stmt_acceptee->bind_param("i", $demenagement_id);
+  $stmt_acceptee->execute();
+  $result_acceptee = $stmt_acceptee->get_result();
+  $nb_acceptees = $result_acceptee->fetch_assoc()['nb_acceptees'];
+  $stmt_acceptee->close();
+  
+  // Si une proposition a été acceptée, bloquer la modification (sauf pour les admins)
+  if ($nb_acceptees > 0 && !$is_admin) {
+    $_SESSION['erreur'] = "Vous ne pouvez pas modifier cette demande car vous avez déjà accepté un déménageur.";
+    $mysqli->close();
+    header('Location: mes_demenagements.php');
+    exit();
+  }
+  
   $mysqli->close();
   
   $titre = "Modifier le déménagement";
@@ -122,20 +152,20 @@
           <h5 class="mb-0">Lieu de départ</h5>
         </div>
         <div class="card-body">
+          <input type="radio" class="btn-check" name="depart_type" id="depart_maison" 
+                 value="maison" autocomplete="off" <?php echo ($demenagement['depart_type'] == 'maison') ? 'checked' : ''; ?> required>
+          <input type="radio" class="btn-check" name="depart_type" id="depart_appartement" 
+                 value="appartement" autocomplete="off" <?php echo ($demenagement['depart_type'] == 'appartement') ? 'checked' : ''; ?> required>
+          
           <div class="mb-3">
             <label class="form-label">Type de logement *</label>
             <div class="btn-group w-100" role="group">
-              <input type="radio" class="btn-check" name="depart_type" id="depart_maison" 
-                     value="maison" autocomplete="off" <?php echo ($demenagement['depart_type'] == 'maison') ? 'checked' : ''; ?> required>
               <label class="btn btn-outline-primary" for="depart_maison">Maison</label>
-              
-              <input type="radio" class="btn-check" name="depart_type" id="depart_appartement" 
-                     value="appartement" autocomplete="off" <?php echo ($demenagement['depart_type'] == 'appartement') ? 'checked' : ''; ?> required>
               <label class="btn btn-outline-primary" for="depart_appartement">Appartement</label>
             </div>
           </div>
           
-          <div id="depart_details" style="display:<?php echo ($demenagement['depart_type'] == 'appartement') ? 'block' : 'none'; ?>;">
+          <div id="depart_details" class="<?php echo ($demenagement['depart_type'] != 'appartement') ? 'logement-details-hidden' : ''; ?>">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="depart_etage" class="form-label">Étage</label>
@@ -160,20 +190,20 @@
           <h5 class="mb-0">Lieu d'arrivée</h5>
         </div>
         <div class="card-body">
+          <input type="radio" class="btn-check" name="arrivee_type" id="arrivee_maison" 
+                 value="maison" autocomplete="off" <?php echo ($demenagement['arrivee_type'] == 'maison') ? 'checked' : ''; ?> required>
+          <input type="radio" class="btn-check" name="arrivee_type" id="arrivee_appartement" 
+                 value="appartement" autocomplete="off" <?php echo ($demenagement['arrivee_type'] == 'appartement') ? 'checked' : ''; ?> required>
+          
           <div class="mb-3">
             <label class="form-label">Type de logement *</label>
             <div class="btn-group w-100" role="group">
-              <input type="radio" class="btn-check" name="arrivee_type" id="arrivee_maison" 
-                     value="maison" autocomplete="off" <?php echo ($demenagement['arrivee_type'] == 'maison') ? 'checked' : ''; ?> required>
               <label class="btn btn-outline-primary" for="arrivee_maison">Maison</label>
-              
-              <input type="radio" class="btn-check" name="arrivee_type" id="arrivee_appartement" 
-                     value="appartement" autocomplete="off" <?php echo ($demenagement['arrivee_type'] == 'appartement') ? 'checked' : ''; ?> required>
               <label class="btn btn-outline-primary" for="arrivee_appartement">Appartement</label>
             </div>
           </div>
           
-          <div id="arrivee_details" style="display:<?php echo ($demenagement['arrivee_type'] == 'appartement') ? 'block' : 'none'; ?>;">
+          <div id="arrivee_details" class="<?php echo ($demenagement['arrivee_type'] != 'appartement') ? 'logement-details-hidden' : ''; ?>">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="arrivee_etage" class="form-label">Étage</label>
@@ -221,44 +251,16 @@
       </div>
       
       <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
-        <a href="mes_demenagements.php" class="btn btn-outline-secondary me-md-2">Annuler</a>
+        <?php if ($is_admin): ?>
+          <a href="admin_annonces.php" class="btn btn-outline-secondary me-md-2">Annuler</a>
+        <?php else: ?>
+          <a href="mes_demenagements.php" class="btn btn-outline-secondary me-md-2">Annuler</a>
+        <?php endif; ?>
         <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
       </div>
     </form>
   </div>
 </div>
-
-<script>
-  // Afficher/masquer les détails selon le type de logement (départ)
-  document.querySelectorAll('input[name="depart_type"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-      const details = document.getElementById('depart_details');
-      if (this.value === 'appartement') {
-        details.style.display = 'block';
-        document.getElementById('depart_etage').required = true;
-      } else {
-        details.style.display = 'none';
-        document.getElementById('depart_etage').required = false;
-        document.getElementById('depart_etage').value = '';
-      }
-    });
-  });
-  
-  // Afficher/masquer les détails selon le type de logement (arrivée)
-  document.querySelectorAll('input[name="arrivee_type"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-      const details = document.getElementById('arrivee_details');
-      if (this.value === 'appartement') {
-        details.style.display = 'block';
-        document.getElementById('arrivee_etage').required = true;
-      } else {
-        details.style.display = 'none';
-        document.getElementById('arrivee_etage').required = false;
-        document.getElementById('arrivee_etage').value = '';
-      }
-    });
-  });
-</script>
 
 <?php
   include('../includes/footer.inc.php');

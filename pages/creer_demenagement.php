@@ -82,20 +82,20 @@
           <h5 class="mb-0">Lieu de départ</h5>
         </div>
         <div class="card-body">
+          <input type="radio" class="btn-check" name="depart_type" id="depart_maison" 
+                 value="maison" autocomplete="off" required>
+          <input type="radio" class="btn-check" name="depart_type" id="depart_appartement" 
+                 value="appartement" autocomplete="off" required>
+          
           <div class="mb-3">
             <label class="form-label">Type de logement *</label>
             <div class="btn-group w-100" role="group">
-              <input type="radio" class="btn-check" name="depart_type" id="depart_maison" 
-                     value="maison" autocomplete="off" required>
               <label class="btn btn-outline-primary" for="depart_maison">Maison</label>
-              
-              <input type="radio" class="btn-check" name="depart_type" id="depart_appartement" 
-                     value="appartement" autocomplete="off" required>
               <label class="btn btn-outline-primary" for="depart_appartement">Appartement</label>
             </div>
           </div>
           
-          <div id="depart_details" style="display:none;">
+          <div id="depart_details" class="logement-details-hidden">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="depart_etage" class="form-label">Étage</label>
@@ -120,20 +120,20 @@
           <h5 class="mb-0">Lieu d'arrivée</h5>
         </div>
         <div class="card-body">
+          <input type="radio" class="btn-check" name="arrivee_type" id="arrivee_maison" 
+                 value="maison" autocomplete="off" required>
+          <input type="radio" class="btn-check" name="arrivee_type" id="arrivee_appartement" 
+                 value="appartement" autocomplete="off" required>
+          
           <div class="mb-3">
             <label class="form-label">Type de logement *</label>
             <div class="btn-group w-100" role="group">
-              <input type="radio" class="btn-check" name="arrivee_type" id="arrivee_maison" 
-                     value="maison" autocomplete="off" required>
               <label class="btn btn-outline-primary" for="arrivee_maison">Maison</label>
-              
-              <input type="radio" class="btn-check" name="arrivee_type" id="arrivee_appartement" 
-                     value="appartement" autocomplete="off" required>
               <label class="btn btn-outline-primary" for="arrivee_appartement">Appartement</label>
             </div>
           </div>
           
-          <div id="arrivee_details" style="display:none;">
+          <div id="arrivee_details" class="logement-details-hidden">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="arrivee_etage" class="form-label">Étage</label>
@@ -202,38 +202,6 @@
     </form>
   </div>
 </div>
-
-<script>
-  // Afficher/masquer les détails selon le type de logement (départ)
-  document.querySelectorAll('input[name="depart_type"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-      const details = document.getElementById('depart_details');
-      if (this.value === 'appartement') {
-        details.style.display = 'block';
-        document.getElementById('depart_etage').required = true;
-      } else {
-        details.style.display = 'none';
-        document.getElementById('depart_etage').required = false;
-        document.getElementById('depart_etage').value = '';
-      }
-    });
-  });
-  
-  // Afficher/masquer les détails selon le type de logement (arrivée)
-  document.querySelectorAll('input[name="arrivee_type"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-      const details = document.getElementById('arrivee_details');
-      if (this.value === 'appartement') {
-        details.style.display = 'block';
-        document.getElementById('arrivee_etage').required = true;
-      } else {
-        details.style.display = 'none';
-        document.getElementById('arrivee_etage').required = false;
-        document.getElementById('arrivee_etage').value = '';
-      }
-    });
-  });
-</script>
 
 <?php
   include('../includes/footer.inc.php');
