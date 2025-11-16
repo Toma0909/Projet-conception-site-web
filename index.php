@@ -1,4 +1,11 @@
+
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// ... votre code PHP habituel commence ici ...
+// (par exemple : include 'header.php', session_start(), etc.)
   session_start();
   $titre = "Accueil";
   

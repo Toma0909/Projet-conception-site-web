@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
   session_start();
   
   // Vérifier si l'utilisateur est connecté et est un client
@@ -16,11 +19,22 @@
   $ville_depart = htmlentities($_POST['ville_depart']);
   $ville_arrivee = htmlentities($_POST['ville_arrivee']);
   
-  $depart_type = htmlentities($_POST['depart_type']);
+  $depart_type = trim($_POST['depart_type']);
+  if (!in_array($depart_type, ['maison', 'appartement'])) {
+      $_SESSION['erreur'] = "Type de départ invalide: " . htmlentities($depart_type);
+      header('Location: creer_demenagement.php');
+      exit();
+  }
   $depart_etage = isset($_POST['depart_etage']) && !empty($_POST['depart_etage']) ? intval($_POST['depart_etage']) : NULL;
   $depart_ascenseur = isset($_POST['depart_ascenseur']) ? intval($_POST['depart_ascenseur']) : 0;
   
-  $arrivee_type = htmlentities($_POST['arrivee_type']);
+  $arrivee_type = trim($_POST['arrivee_type']);
+  if (!in_array($arrivee_type, ['maison', 'appartement'])) {
+      $_SESSION['erreur'] = "Type d'arrivée invalide: " . htmlentities($arrivee_type);
+      header('Location: creer_demenagement.php');
+      exit();
+  }
+  error_log("depart_type: '" . $depart_type . "', arrivee_type: '" . $arrivee_type . "'");
   $arrivee_etage = isset($_POST['arrivee_etage']) && !empty($_POST['arrivee_etage']) ? intval($_POST['arrivee_etage']) : NULL;
   $arrivee_ascenseur = isset($_POST['arrivee_ascenseur']) ? intval($_POST['arrivee_ascenseur']) : 0;
   
@@ -49,7 +63,7 @@
   
   if ($stmt = $mysqli->prepare($query)) {
     $stmt->bind_param(
-      "isssssssisisidd",
+      "isssssssiisiiddi",
       $client_id, $titre, $description, $date_demenagement, $heure_debut,
       $ville_depart, $ville_arrivee, $depart_type, $depart_etage, $depart_ascenseur,
       $arrivee_type, $arrivee_etage, $arrivee_ascenseur, $volume, $poids, $nombre_demenageurs

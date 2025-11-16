@@ -112,6 +112,8 @@
           
           <div class="d-grid gap-2">
             <a href="detail_annonce.php?id=<?php echo $dem['id']; ?>" class="btn btn-primary btn-sm">Voir les détails</a>
+            <a href="modifier_demenagement.php?id=<?php echo $dem['id']; ?>" class="btn btn-outline-secondary btn-sm">Modifier</a>
+            <a href="confirmer_suppression.php?id=<?php echo $dem['id']; ?>" class="btn btn-outline-danger btn-sm">Supprimer</a>
           </div>
         </div>
         <div class="card-footer text-muted">
