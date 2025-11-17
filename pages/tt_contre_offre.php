@@ -61,19 +61,39 @@
     exit();
   }
   
-  // Récupérer le prix actuel (dernière contre-offre acceptée ou prix initial)
-  $co_query = "SELECT prix_propose FROM contre_offre 
-               WHERE proposition_id = ? AND statut = 'accepte' 
-               ORDER BY date_creation DESC LIMIT 1";
+  // Récupérer le prix actuel (dernière contre-offre en cours ou acceptée, ou prix initial)
+  $co_query = "SELECT prix_propose, statut FROM contre_offre 
+               WHERE proposition_id = ? 
+               ORDER BY date_creation DESC";
   $co_stmt = $mysqli->prepare($co_query);
   $co_stmt->bind_param("i", $proposition_id);
   $co_stmt->execute();
   $co_result = $co_stmt->get_result();
   
   $prix_actuel = $proposition['prix'];
-  if ($co_result->num_rows > 0) {
-    $prix_actuel = $co_result->fetch_assoc()['prix_propose'];
+  
+  // Prendre en compte la dernière contre-offre (acceptée en priorité, sinon en attente)
+  $derniere_acceptee = null;
+  $derniere_en_attente = null;
+  
+  while ($row = $co_result->fetch_assoc()) {
+    if ($row['statut'] == 'accepte' && $derniere_acceptee === null) {
+      $derniere_acceptee = $row['prix_propose'];
+    }
+    if ($row['statut'] == 'en_attente' && $derniere_en_attente === null) {
+      $derniere_en_attente = $row['prix_propose'];
+    }
   }
+  
+  // Si une contre-offre est en attente, c'est le prix de référence
+  if ($derniere_en_attente !== null) {
+    $prix_actuel = $derniere_en_attente;
+  }
+  // Sinon, prendre la dernière acceptée
+  elseif ($derniere_acceptee !== null) {
+    $prix_actuel = $derniere_acceptee;
+  }
+  
   $co_stmt->close();
   
   // Valider le prix (le client doit proposer moins, le déménageur peut proposer plus)
@@ -91,6 +111,15 @@
   $insert_stmt->bind_param("iids", $proposition_id, $auteur_id, $prix_propose, $commentaire);
   
   if ($insert_stmt->execute()) {
+    // Refuser toutes les anciennes contre-offres en attente de cet auteur pour cette proposition
+    $refuse_query = "UPDATE contre_offre SET statut = 'refuse' 
+                     WHERE proposition_id = ? AND auteur_id = ? AND statut = 'en_attente' AND id != ?";
+    $refuse_stmt = $mysqli->prepare($refuse_query);
+    $new_co_id = $insert_stmt->insert_id;
+    $refuse_stmt->bind_param("iii", $proposition_id, $auteur_id, $new_co_id);
+    $refuse_stmt->execute();
+    $refuse_stmt->close();
+    
     $_SESSION['succes'] = "Contre-offre envoyée avec succès !";
   } else {
     $_SESSION['erreur'] = "Erreur lors de l'envoi de la contre-offre.";

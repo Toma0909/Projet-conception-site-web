@@ -66,6 +66,15 @@
   $demenagement = $result->fetch_assoc();
   $stmt->close();
   
+  // Récupérer les images existantes
+  $query_images = "SELECT * FROM demenagement_image WHERE demenagement_id = ? ORDER BY date_ajout";
+  $stmt_images = $mysqli->prepare($query_images);
+  $stmt_images->bind_param("i", $demenagement_id);
+  $stmt_images->execute();
+  $result_images = $stmt_images->get_result();
+  $images = $result_images->fetch_all(MYSQLI_ASSOC);
+  $stmt_images->close();
+  
   // Vérifier s'il y a des propositions acceptées
   $query_acceptee = "SELECT COUNT(*) as nb_acceptees FROM proposition WHERE demenagement_id = ? AND statut = 'accepte'";
   $stmt_acceptee = $mysqli->prepare($query_acceptee);
@@ -246,6 +255,45 @@
               <input type="number" class="form-control" id="nombre_demenageurs" name="nombre_demenageurs" 
                      min="1" max="10" value="<?php echo $demenagement['nombre_demenageurs']; ?>" required>
             </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Images -->
+      <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="mb-0">Photos du déménagement</h5>
+        </div>
+        <div class="card-body">
+          <?php if (!empty($images)): ?>
+            <div class="mb-3">
+              <label class="form-label">Images actuelles</label>
+              <div class="row g-3">
+                <?php foreach ($images as $image): ?>
+                  <div class="col-md-3">
+                    <div class="card">
+                      <img src="<?php echo htmlspecialchars($image['chemin']); ?>" class="card-img-top" alt="Image du déménagement">
+                      <div class="card-body p-2">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="images_supprimer[]" value="<?php echo $image['id']; ?>" id="img_<?php echo $image['id']; ?>">
+                          <label class="form-check-label" for="img_<?php echo $image['id']; ?>">
+                            Supprimer
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          <?php else: ?>
+            <p class="text-muted">Aucune image pour ce déménagement.</p>
+          <?php endif; ?>
+          
+          <div class="mb-3">
+            <label for="images" class="form-label">Ajouter de nouvelles images</label>
+            <input type="file" class="form-control" id="images" name="images[]" accept="image/*" multiple>
+            <div class="form-text">Vous pouvez sélectionner plusieurs images (JPEG, PNG, GIF). Taille max : 5 Mo par image.</div>
           </div>
         </div>
       </div>

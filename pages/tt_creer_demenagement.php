@@ -81,7 +81,7 @@ error_reporting(E_ALL);
       
       // Traiter les images si présentes
       if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
-        $upload_dir = '../assets/images/demenagements/';
+        $upload_dir = __DIR__ . '/../assets/images/demenagements/';
         
         // Créer le dossier s'il n'existe pas
         if (!file_exists($upload_dir)) {
@@ -100,12 +100,13 @@ error_reporting(E_ALL);
               $file_extension = pathinfo($_FILES['images']['name'][$key], PATHINFO_EXTENSION);
               $new_filename = 'dem_' . $demenagement_id . '_' . time() . '_' . $key . '.' . $file_extension;
               $destination = $upload_dir . $new_filename;
+              $chemin_relatif = '/Projet-conception-site-web/assets/images/demenagements/' . $new_filename;
               
               if (move_uploaded_file($tmp_name, $destination)) {
-                // Insérer en base de données
+                // Insérer en base de données avec le chemin relatif
                 $image_query = "INSERT INTO demenagement_image (demenagement_id, nom_fichier, chemin) VALUES (?, ?, ?)";
                 if ($img_stmt = $mysqli->prepare($image_query)) {
-                  $img_stmt->bind_param("iss", $demenagement_id, $new_filename, $destination);
+                  $img_stmt->bind_param("iss", $demenagement_id, $new_filename, $chemin_relatif);
                   $img_stmt->execute();
                   $img_stmt->close();
                 }

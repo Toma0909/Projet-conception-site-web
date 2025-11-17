@@ -92,11 +92,21 @@
         $contre_offres = $co_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         $co_stmt->close();
         
-        // Déterminer le prix actuel (dernière contre-offre acceptée ou prix initial)
+        // Déterminer le prix actuel (dernière contre-offre en cours ou acceptée, ou prix initial)
         $prix_actuel = $prop['prix'];
         $derniere_co = null;
+        
+        // D'abord chercher les contre-offres acceptées
         foreach ($contre_offres as $co) {
           if ($co['statut'] == 'accepte') {
+            $prix_actuel = $co['prix_propose'];
+            $derniere_co = $co;
+          }
+        }
+        
+        // Ensuite, si une contre-offre est en attente, c'est elle qui fait foi pour la négociation
+        foreach ($contre_offres as $co) {
+          if ($co['statut'] == 'en_attente') {
             $prix_actuel = $co['prix_propose'];
             $derniere_co = $co;
           }

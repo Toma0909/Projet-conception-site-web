@@ -78,6 +78,13 @@
   
   if ($update_stmt->execute()) {
     if ($action == 'accepter') {
+      // Refuser toutes les autres contre-offres en attente pour cette proposition
+      $refuse_co_query = "UPDATE contre_offre SET statut = 'refuse' WHERE proposition_id = ? AND id != ? AND statut = 'en_attente'";
+      $refuse_co_stmt = $mysqli->prepare($refuse_co_query);
+      $refuse_co_stmt->bind_param("ii", $contre_offre['proposition_id'], $contre_offre_id);
+      $refuse_co_stmt->execute();
+      $refuse_co_stmt->close();
+      
       // Si le déménageur accepte la contre-offre du client, valider automatiquement la proposition
       if ($contre_offre['auteur_id'] == $contre_offre['client_id'] && $_SESSION['role'] == 2) {
         // Mettre à jour le prix de la proposition
