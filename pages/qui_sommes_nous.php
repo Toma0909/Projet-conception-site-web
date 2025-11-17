@@ -4,8 +4,10 @@
   require_once('../config/param.inc.php');
   include('../includes/header.inc.php');
   include('../includes/menu.inc.php');
-  include('../includes/message.inc.php')
+  include('../includes/message.inc.php');
 ?>
+
+<div class="container my-4">
 
 <div class="row mb-5">
   <div class="col-lg-10 mx-auto">
@@ -215,6 +217,8 @@
       </div>
     </div>
   </div>
+</div>
+
 </div>
 
 <?php
