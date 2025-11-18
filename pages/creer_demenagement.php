@@ -83,9 +83,9 @@
         </div>
         <div class="card-body">
           <input type="radio" class="btn-check" name="depart_type" id="depart_maison" 
-                 value="maison" autocomplete="off" required>
+                 value="maison" required>
           <input type="radio" class="btn-check" name="depart_type" id="depart_appartement" 
-                 value="appartement" autocomplete="off" required>
+                 value="appartement" required>
           
           <div class="mb-3">
             <label class="form-label">Type de logement *</label>
@@ -121,9 +121,9 @@
         </div>
         <div class="card-body">
           <input type="radio" class="btn-check" name="arrivee_type" id="arrivee_maison" 
-                 value="maison" autocomplete="off" required>
+                 value="maison" required>
           <input type="radio" class="btn-check" name="arrivee_type" id="arrivee_appartement" 
-                 value="appartement" autocomplete="off" required>
+                 value="appartement" required>
           
           <div class="mb-3">
             <label class="form-label">Type de logement *</label>
