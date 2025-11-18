@@ -100,7 +100,7 @@ error_reporting(E_ALL);
               $file_extension = pathinfo($_FILES['images']['name'][$key], PATHINFO_EXTENSION);
               $new_filename = 'dem_' . $demenagement_id . '_' . time() . '_' . $key . '.' . $file_extension;
               $destination = $upload_dir . $new_filename;
-              $chemin_relatif = '/Projet-conception-site-web/assets/images/demenagements/' . $new_filename;
+              $chemin_relatif = '/grp_6_9/assets/images/demenagements/' . $new_filename;
               
               if (move_uploaded_file($tmp_name, $destination)) {
                 // Insérer en base de données avec le chemin relatif

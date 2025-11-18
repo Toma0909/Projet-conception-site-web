@@ -80,9 +80,8 @@
             <li><strong>Propositions :</strong> <span class="badge bg-info"><?php echo $nb_propositions; ?></span></li>
           </ul>
           <a href="detail_annonce.php?id=<?php echo $annonce['id']; ?>" class="btn btn-primary btn-sm">Voir les détails</a>
-        </div>
-        <div class="card-footer text-muted">
-          <small>Publié le <?php echo date('d/m/Y', strtotime($annonce['date_creation'])); ?></small>
+        </div>        <div class="card-footer text-muted">
+          <small>Publié le <?php echo date('d/m/Y', strtotime($annonce['date_creation'])); ?> par <?php echo htmlspecialchars($annonce['prenom'] . ' ' . $annonce['nom']); ?></small>
         </div>
       </div>
     </div>

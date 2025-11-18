@@ -3,11 +3,11 @@
   date_default_timezone_set('Europe/Paris');
   
   // Définir la racine du projet
-  define('BASE_PATH', '/Projet-conception-site-web');
+  define('BASE_PATH', '/grp_6_9');
   
   // Paramètre de connexion à la BDD 
   $host="localhost";
-  $login="root";
-  $passwd="";
-  $dbname="bdd"; // À modifier si nécessaire
+  $login="grp_6_9";
+  $passwd="38gpLbgWSTULJJ";
+  $dbname="bdd_6_9"; // À modifier si nécessaire
 ?>
